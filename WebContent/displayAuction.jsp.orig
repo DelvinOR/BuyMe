@@ -1,0 +1,101 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<% String name = request.getParameter("user"); %>
+<title>Auction Listing - <%= name %></title>
+</head>
+<body>
+<%@page import="java.sql.*" %>
+
+<%
+if((session.getAttribute("user")== null)){
+%>
+<<<<<<< HEAD
+	<a href="login.jsp">Log in</a>
+	<br><a href= "index.html" > Homepage</a> <br>
+=======
+	<a href="login.jsp">Log in</a><br>
+	<a href= "index.html" > Homepage</a>
+>>>>>>> 32f88f799de83c026bca48ee5db619bc49ccd3ad
+<%
+}else{
+%>
+	<a href="logout.jsp">Log out</a>
+	<br><a href= "dashboard.jsp?user=<%= session.getAttribute("user") %>" > Homepage</a> <br>
+<%
+}
+%>
+<br><a href= "displayItems.jsp" > Back to auction list</a><br>
+
+<%
+String id = request.getParameter("Id");
+
+try {
+Class.forName("com.mysql.jdbc.Driver");
+} catch (ClassNotFoundException e) {
+e.printStackTrace();
+}
+
+Connection conn = null;
+Statement st = null;
+Statement st1 = null;
+ResultSet rs = null;
+ResultSet rs1 = null;
+%>
+
+<div width="480">
+<%
+try{ 
+conn = DriverManager.getConnection("jdbc:mysql://cs336db.cl0xdj4x6xaa.us-east-2.rds.amazonaws.com:3306/cs336db", "cs336", "cs336masterkey");
+st=conn.createStatement();
+st1=conn.createStatement();
+
+int itemID = Integer.parseInt(request.getParameter("Id"));
+String itemName;
+String itemType;
+String description;
+
+rs = st.executeQuery("SELECT * FROM Items WHERE itemID = '" + itemID + "'");
+rs.next();
+itemName = rs.getString("ItemName");
+itemType = rs.getString("ItemType");
+description = rs.getString("Description");
+
+rs1 = st1.executeQuery("SELECT * FROM Auctions WHERE itemID = '"+itemID+"'");
+rs1.next();
+double price = rs1.getDouble("MinPrice");
+%>
+<h2><font><strong>Auction #<%= id %> - <%= name %></strong></font></h2>
+<p>Category: <%= itemType %></p>
+	<table cellpadding="5" cellspacing="5" border="1">
+		<tr>
+			<td>Current Bid:</td>
+			<td>
+				<%
+					String currentBid = rs1.getString("InitialBid");
+						if (currentBid != null){
+							out.print(currentBid);
+						}
+				%>
+			</td>
+			<td><a href = <%= "\"createBid.jsp?Id=" + id + "&Name=" + name + "\"" %>> Bid</a></td>
+		</tr>
+	</table>
+<p>Description: <%= description %></p>
+</div>
+<% 
+rs.close();
+rs1.close();
+st.close();
+st1.close();
+conn.close();
+} catch (Exception e) {
+e.printStackTrace();
+}
+%>
+
+</body>
+</html>
