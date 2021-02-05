@@ -1,3 +1,5 @@
-# auctionsite
+# BuyMe Web App
 
-Collaborated in a team of four programmers to deploy a Java based web app that functions like Ebay. Web content is designed in HTML with back-end programmed in Java, JDBC, and SQL to communicate with a database in MySQL.
+Worked heavily with a team of programmers to deploy an e-commerce web app using AWS
+
+Technologies include Java, JSP, and JDBC to communicate with a database in MySQL
